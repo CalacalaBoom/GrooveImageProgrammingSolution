@@ -23,7 +23,7 @@ namespace Solution
     public partial class MainWindow : Window
     {
         public List<Point> Points = new List<Point>();
-        public List<Path> Paths = new List<Path>();
+        public List<Path> Lines = new List<Path>();
 
         public MainWindow()
         {
@@ -44,10 +44,10 @@ namespace Solution
                 if (Points.Count == 0)
                 {
                     Path point = new Path();
-                    point.Data = (Geometry)converter.ConvertFrom($"M {pp.X + 2},{pp.Y} A 2,2 0 1 1 {pp.X + 2},{pp.Y - 1} Z");
+                    point.Data = (Geometry)converter.ConvertFrom($"M {pp.X },{pp.Y} A 2,2 0 1 1 {pp.X },{pp.Y } Z");
                     point.Fill = Brushes.Blue;
-                    Grdrawing.Children.Add(point);
-                    Points.Add(pp);
+                    //Grdrawing.Children.Add(point);
+                    Points.Add(new Point(pp.X+2,pp.Y));
                 }
                 else
                 {
@@ -57,20 +57,40 @@ namespace Solution
                     if (XAbs > YAbs)
                     {
                         Path point = new Path();
-                        point.Data = (Geometry)converter.ConvertFrom($"M {pp.X + 2},{last.Y} A 2,2 0 1 1 {pp.X + 2},{last.Y - 1} Z");
+                        point.Data = (Geometry)converter.ConvertFrom($"M {pp.X },{last.Y} A 2,2 0 1 1 {pp.X },{last.Y } Z");
                         point.Fill = Brushes.Blue;
-                        Grdrawing.Children.Add(point);
-                        Points.Add(pp);
+                        //Grdrawing.Children.Add(point);
+                        Points.Add(new Point(pp.X,last.Y));
+
+                        LineGeometry myLineGeometry = new LineGeometry();
+                        myLineGeometry.StartPoint = last;
+                        myLineGeometry.EndPoint = new Point(pp.X , last.Y);
 
                         Path line= new Path();
+                        line.Data = myLineGeometry;
+                        line.Stroke = Brushes.Black;
+                        line.StrokeThickness = 1;
+                        Grdrawing.Children.Add(line);
+                        Lines.Add(line);
                     }
                     else
                     {
                         Path point = new Path();
-                        point.Data = (Geometry)converter.ConvertFrom($"M {last.X + 2},{pp.Y} A 2,2 0 1 1 {last.X + 2},{pp.Y - 1} Z");
+                        point.Data = (Geometry)converter.ConvertFrom($"M {last.X },{pp.Y} A 2,2 0 1 1 {last.X },{pp.Y } Z");
                         point.Fill = Brushes.Blue;
-                        Grdrawing.Children.Add(point);
-                        Points.Add(pp);
+                        //Grdrawing.Children.Add(point);
+                        Points.Add(new Point(last.X,pp.Y));
+
+                        LineGeometry myLineGeometry = new LineGeometry();
+                        myLineGeometry.StartPoint = last;
+                        myLineGeometry.EndPoint = new Point(last.X , pp.Y);
+
+                        Path line = new Path();
+                        line.Data = myLineGeometry;
+                        line.Stroke = Brushes.Black;
+                        line.StrokeThickness = 1;
+                        Grdrawing.Children.Add(line);
+                        Lines.Add(line);
                     }
                 }
 
